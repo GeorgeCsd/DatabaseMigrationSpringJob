@@ -1,6 +1,8 @@
-package com.github.georgeCsd.databasemigration.service;
+package com.github.george.databasemigration.service;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @Service
 public class JobService {
+    private static final Logger logger = LoggerFactory.getLogger(JobService.class);
 
     @Autowired
     JobLauncher jobLauncher;
@@ -40,9 +43,9 @@ public class JobService {
 
         try {
             JobExecution jobExecution = jobLauncher.run(dataTransferingJob, jobParameters);
-            System.out.println("Job Execution ID = " + jobExecution.getId());
+            logger.info("Job Execution ID = {}", jobExecution.getId());
         } catch (Exception e) {
-            System.out.println("Exception while starting job");
+            logger.error("Exception while starting job", e);
         }
     }
 }

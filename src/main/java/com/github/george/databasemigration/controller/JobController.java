@@ -1,7 +1,6 @@
-package com.github.georgeCsd.databasemigration.controller;
+package com.github.george.databasemigration.controller;
 
-import com.github.georgeCsd.databasemigration.service.JobService;
-import org.springframework.batch.core.launch.JobOperator;
+import com.github.george.databasemigration.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +15,6 @@ public class JobController {
     @Autowired
     JobService jobService;
 
-    @Autowired
-    JobOperator jobOperator;
 
     /**
      * Manually triggers a batch job for data transfer.

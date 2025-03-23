@@ -1,4 +1,4 @@
-package com.github.georgeCsd.databasemigration.entity.mysql;
+package com.github.george.databasemigration.entity.postgresql;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +24,7 @@ public class Student {
     private Long deptId;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private String isActive;
 
     public Long getId() {
         return id;
@@ -66,11 +66,11 @@ public class Student {
         this.deptId = deptId;
     }
 
-    public Boolean getIsActive() {
+    public String getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
+    public void setIsActive(String isActive) {
         this.isActive = isActive;
     }
 

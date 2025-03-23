@@ -1,10 +1,10 @@
-package com.github.georgeCsd.databasemigration.processor;
+package com.github.george.databasemigration.processor;
 
+import com.github.george.databasemigration.entity.mysql.Student;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
-
-
-import com.github.georgeCsd.databasemigration.entity.postgresql.Student;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Processor class for transforming Student data from PostgreSQL to MySQL.
@@ -12,7 +12,9 @@ import com.github.georgeCsd.databasemigration.entity.postgresql.Student;
  * between two different database entities.
  */
 @Component
-public class DataTransferProcessor implements ItemProcessor<Student, com.github.georgeCsd.databasemigration.entity.mysql.Student> {
+public class DataTransferProcessor implements ItemProcessor<com.github.george.databasemigration.entity.postgresql.Student, Student> {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataTransferProcessor.class);
 
     /**
      * Processes a Student entity from PostgreSQL and converts it into
@@ -20,21 +22,19 @@ public class DataTransferProcessor implements ItemProcessor<Student, com.github.
      *
      * @param item The Student entity from PostgreSQL.
      * @return A transformed Student entity compatible with MySQL.
-     * @throws Exception If any processing error occurs.
      */
     @Override
-    public com.github.georgeCsd.databasemigration.entity.mysql.Student process(Student item) throws Exception {
-        System.out.println("Student id: " + item.getId());
-        com.github.georgeCsd.databasemigration.entity.mysql.Student student = new
-                com.github.georgeCsd.databasemigration.entity.mysql.Student();
+    public Student process(com.github.george.databasemigration.entity.postgresql.Student item){
+        logger.info("Student id: {}", item.getId());
+        Student student = new
+                Student();
 
         student.setId(item.getId());
         student.setFirstName(item.getFirstName());
         student.setLastName(item.getLastName());
         student.setEmail(item.getEmail());
         student.setDeptId(item.getDeptId());
-        student.setIsActive(item.getIsActive() != null ?
-                Boolean.valueOf(item.getIsActive()) : false);
+        student.setIsActive(Boolean.parseBoolean(item.getIsActive()));
 
         return student;
 

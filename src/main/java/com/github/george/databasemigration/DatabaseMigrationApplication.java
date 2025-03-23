@@ -1,4 +1,4 @@
-package com.github.georgeCsd.databasemigration;
+package com.github.george.databasemigration;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
@@ -9,9 +9,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableBatchProcessing
-@ComponentScan({"com.github.georgeCsd.databasemigration.configuration", "com.github.georgeCsd.databasemigration.processor",
-        "com.github.georgeCsd.databasemigration.scheduled", "com.github.georgeCsd.databasemigration.service"
-        , "com.github.georgeCsd.databasemigration.controller"})
+@ComponentScan({"com.github.george.databasemigration.configuration", "com.github.george.databasemigration.processor",
+        "com.github.george.databasemigration.scheduled", "com.github.george.databasemigration.service"
+        , "com.github.george.databasemigration.controller"})
 @EnableAsync
 @EnableScheduling
 public class DatabaseMigrationApplication {

@@ -1,12 +1,12 @@
-package com.github.georgeCsd.databasemigration.processor;
+package com.github.george.databasemigration.processor;
 
-import com.github.georgeCsd.databasemigration.entity.postgresql.Student;
+import com.github.george.databasemigration.entity.postgresql.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataTransferProcessorTest {
+class DataTransferProcessorTest {
 
     private DataTransferProcessor processor;
 
@@ -16,7 +16,7 @@ public class DataTransferProcessorTest {
     }
 
     @Test
-    void testProcess() throws Exception {
+    void testProcess() {
         Student postgresStudent = new Student();
         postgresStudent.setId(1L);
         postgresStudent.setFirstName("John");
@@ -25,7 +25,7 @@ public class DataTransferProcessorTest {
         postgresStudent.setDeptId(10L);
         postgresStudent.setIsActive("true");
 
-        com.github.georgeCsd.databasemigration.entity.mysql.Student mysqlStudent = processor.process(postgresStudent);
+        com.github.george.databasemigration.entity.mysql.Student mysqlStudent = processor.process(postgresStudent);
 
         assertNotNull(mysqlStudent);
         assertEquals(postgresStudent.getId(), mysqlStudent.getId());
@@ -37,7 +37,7 @@ public class DataTransferProcessorTest {
     }
 
     @Test
-    void testProcess_NullIsActive() throws Exception {
+    void testProcess_NullIsActive() {
         Student postgresStudent = new Student();
         postgresStudent.setId(2L);
         postgresStudent.setFirstName("Jane");
@@ -46,7 +46,7 @@ public class DataTransferProcessorTest {
         postgresStudent.setDeptId(20L);
         postgresStudent.setIsActive(null);
 
-        com.github.georgeCsd.databasemigration.entity.mysql.Student mysqlStudent = processor.process(postgresStudent);
+        com.github.george.databasemigration.entity.mysql.Student mysqlStudent = processor.process(postgresStudent);
 
         assertNotNull(mysqlStudent);
         assertFalse(mysqlStudent.getIsActive());

@@ -1,9 +1,9 @@
-package com.github.georgeCsd.databasemigration.scheduled;
+package com.github.george.databasemigration.scheduled;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import com.github.georgeCsd.databasemigration.processor.DataTransferProcessor;
+import com.github.george.databasemigration.processor.DataTransferProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import com.github.georgeCsd.databasemigration.entity.postgresql.Student;
+import com.github.george.databasemigration.entity.postgresql.Student;
 
 /**
  * Configuration class for defining a Spring Batch job that transfers
@@ -25,33 +25,31 @@ import com.github.georgeCsd.databasemigration.entity.postgresql.Student;
 @Configuration
 public class DataTransferJob {
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+
+    private final DataTransferProcessor dataTransferProcessor;
+
+    private final  DataSource universitydatasource;
+
+    private final  DataSource postgresdatasource;
+
+    private final EntityManagerFactory postgresqlEntityManagerFactory;
+
+    private final EntityManagerFactory mysqlEntityManagerFactory;
+
+    private final JpaTransactionManager jpaTransactionManager;
 
     @Autowired
-    private StepBuilderFactory stepBuilderFactory;
-
-    @Autowired
-    private DataTransferProcessor dataTransferProcessor;
-
-    @Autowired
-    @Qualifier("universitydatasource")
-    private DataSource universitydatasource;
-
-    @Autowired
-    @Qualifier("postgresdatasource")
-    private DataSource postgresdatasource;
-
-    @Autowired
-    @Qualifier("postgresqlEntityManagerFactory")
-    private EntityManagerFactory postgresqlEntityManagerFactory;
-
-    @Autowired
-    @Qualifier("mysqlEntityManagerFactory")
-    private EntityManagerFactory mysqlEntityManagerFactory;
-
-    @Autowired
-    private JpaTransactionManager jpaTransactionManager;
+    public DataTransferJob(StepBuilderFactory stepBuilderFactory,DataTransferProcessor dataTransferProcessor,@Qualifier("universitydatasource") DataSource universitydatasource,@Qualifier("postgresdatasource")
+    DataSource postgresdatasource,@Qualifier("postgresqlEntityManagerFactory") EntityManagerFactory postgresqlEntityManagerFactory,@Qualifier("mysqlEntityManagerFactory") EntityManagerFactory mysqlEntityManagerFactory,JpaTransactionManager jpaTransactionManager) {
+        this.stepBuilderFactory = stepBuilderFactory;
+        this.dataTransferProcessor = dataTransferProcessor;
+        this.universitydatasource = universitydatasource;
+        this.postgresdatasource = postgresdatasource;
+        this.postgresqlEntityManagerFactory = postgresqlEntityManagerFactory;
+        this.mysqlEntityManagerFactory = mysqlEntityManagerFactory;
+        this.jpaTransactionManager = jpaTransactionManager;
+    }
 
     /**
      * Defines the batch job for transferring student data.
@@ -59,7 +57,7 @@ public class DataTransferJob {
      * @return A configured Job instance.
      */
     @Bean
-    public Job dataTransferingJob() {
+    public Job dataTransferingJob(JobBuilderFactory jobBuilderFactory) {
         return jobBuilderFactory.get("Data Transfering Job")
                 .incrementer(new RunIdIncrementer())
                 .start(firstDataTransferingStep())
@@ -75,7 +73,7 @@ public class DataTransferJob {
      */
     private Step firstDataTransferingStep() {
         return stepBuilderFactory.get("First Data Transfering Step")
-                .<Student, com.github.georgeCsd.databasemigration.entity.mysql.Student>chunk(5000)
+                .<Student, com.github.george.databasemigration.entity.mysql.Student>chunk(5000)
                 .reader(jpaCursorItemReader())
                 .processor(dataTransferProcessor)
                 .writer(jpaItemWriter())
@@ -105,8 +103,8 @@ public class DataTransferJob {
      *
      * @return A JpaItemWriter for writing students.
      */
-    public JpaItemWriter<com.github.georgeCsd.databasemigration.entity.mysql.Student> jpaItemWriter() {
-        JpaItemWriter<com.github.georgeCsd.databasemigration.entity.mysql.Student> jpaItemWriter = new JpaItemWriter<>();
+    public JpaItemWriter<com.github.george.databasemigration.entity.mysql.Student> jpaItemWriter() {
+        JpaItemWriter<com.github.george.databasemigration.entity.mysql.Student> jpaItemWriter = new JpaItemWriter<>();
         jpaItemWriter.setEntityManagerFactory(mysqlEntityManagerFactory);
         return jpaItemWriter;
     }

@@ -1,4 +1,4 @@
-package com.github.georgeCsd.databasemigration.service;
+package com.github.george.databasemigration.service;
 
 import java.util.HashMap;
 import java.util.Map;

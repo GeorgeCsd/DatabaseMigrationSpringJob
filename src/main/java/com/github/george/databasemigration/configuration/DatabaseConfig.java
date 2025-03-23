@@ -1,4 +1,4 @@
-package com.github.georgeCsd.databasemigration.configuration;
+package com.github.george.databasemigration.configuration;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -59,7 +59,7 @@ public class DatabaseConfig {
                 new LocalContainerEntityManagerFactoryBean();
 
         lem.setDataSource(postgresdatasource());
-        lem.setPackagesToScan("com.github.georgeCsd.databasemigration.entity.postgresql");
+        lem.setPackagesToScan("com.github.george.databasemigration.entity.postgresql");
         lem.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         lem.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         lem.afterPropertiesSet();
@@ -80,7 +80,7 @@ public class DatabaseConfig {
                 new LocalContainerEntityManagerFactoryBean();
 
         lem.setDataSource(universitydatasource());
-        lem.setPackagesToScan("com.github.georgeCsd.databasemigration.entity.mysql");
+        lem.setPackagesToScan("com.github.george.databasemigration.entity.mysql");
         lem.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         lem.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         lem.afterPropertiesSet();

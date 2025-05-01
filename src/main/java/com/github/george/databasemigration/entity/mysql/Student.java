@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * This class represents an entity of object student stored in the MySQL database.
+ */
 @Entity
 @Table(name = "student")
 public class Student {

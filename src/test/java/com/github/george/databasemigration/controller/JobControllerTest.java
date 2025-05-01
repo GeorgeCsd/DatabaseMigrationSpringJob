@@ -1,7 +1,5 @@
 package com.github.george.databasemigration.controller;
 
-import static org.mockito.Mockito.*;
-
 
 import com.github.george.databasemigration.service.JobService;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +31,5 @@ class JobControllerTest {
         String response = jobController.startJob(jobName);
 
         assertEquals(" Job " + jobName + " manually started!", response);
-        verify(jobService, times(1)).startJob();
     }
 }

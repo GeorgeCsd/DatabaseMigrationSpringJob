@@ -31,19 +31,32 @@ public class JobService {
     @Autowired
     Job dataTransferingJob;
 
+    @Qualifier("letterShiftingJob")
+    @Autowired
+    Job letterShiftingJob;
+
     /**
      * Starts the batch job asynchronously.
      * It sets job parameters, including the current timestamp, and triggers the execution.
      */
     @Async
-    public void startJob() {
+    public void startJob(String jobName) {
+        
         Map<String, JobParameter> params = new HashMap<>();
         params.put("currentTime", new JobParameter(System.currentTimeMillis()));
         JobParameters jobParameters = new JobParameters(params);
-
+        logger.info("Starting job {}", jobName);
         try {
-            JobExecution jobExecution = jobLauncher.run(dataTransferingJob, jobParameters);
-            logger.info("Job Execution ID = {}", jobExecution.getId());
+            
+            if (jobName.equals("dataTransferingJob")) {
+                JobExecution jobExecution = jobLauncher.run(dataTransferingJob, jobParameters);
+                logger.info("Job Execution ID = {}", jobExecution.getId());
+            } 
+            else if (jobName.equals("letterShiftingJob")) {
+                JobExecution jobExecution = jobLauncher.run(letterShiftingJob, jobParameters);
+                logger.info("Job Execution ID = {}", jobExecution.getId());
+            }
+            
         } catch (Exception e) {
             logger.error("Exception while starting job", e);
         }

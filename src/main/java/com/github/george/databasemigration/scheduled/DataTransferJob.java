@@ -1,9 +1,8 @@
 package com.github.george.databasemigration.scheduled;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
-import com.github.george.databasemigration.processor.DataTransferProcessor;
+import com.github.george.databasemigration.processor.StudentEntityProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -27,28 +26,21 @@ public class DataTransferJob {
 
     private final StepBuilderFactory stepBuilderFactory;
 
-    private final DataTransferProcessor dataTransferProcessor;
-
-    private final  DataSource universitydatasource;
-
-    private final  DataSource postgresdatasource;
+    private final StudentEntityProcessor studentEntityProcessor;
 
     private final EntityManagerFactory postgresqlEntityManagerFactory;
 
     private final EntityManagerFactory mysqlEntityManagerFactory;
 
-    private final JpaTransactionManager jpaTransactionManager;
+    private final JpaTransactionManager studentEntityTransactionManager;
 
     @Autowired
-    public DataTransferJob(StepBuilderFactory stepBuilderFactory,DataTransferProcessor dataTransferProcessor,@Qualifier("universitydatasource") DataSource universitydatasource,@Qualifier("postgresdatasource")
-    DataSource postgresdatasource,@Qualifier("postgresqlEntityManagerFactory") EntityManagerFactory postgresqlEntityManagerFactory,@Qualifier("mysqlEntityManagerFactory") EntityManagerFactory mysqlEntityManagerFactory,JpaTransactionManager jpaTransactionManager) {
+    public DataTransferJob(StepBuilderFactory stepBuilderFactory, StudentEntityProcessor studentEntityProcessor, EntityManagerFactory postgresqlEntityManagerFactory, @Qualifier("studentEntityManagerFactory") EntityManagerFactory mysqlEntityManagerFactory, @Qualifier("studentEntityTransactionManager") JpaTransactionManager studentEntityTransactionManager) {
         this.stepBuilderFactory = stepBuilderFactory;
-        this.dataTransferProcessor = dataTransferProcessor;
-        this.universitydatasource = universitydatasource;
-        this.postgresdatasource = postgresdatasource;
+        this.studentEntityProcessor = studentEntityProcessor;
         this.postgresqlEntityManagerFactory = postgresqlEntityManagerFactory;
         this.mysqlEntityManagerFactory = mysqlEntityManagerFactory;
-        this.jpaTransactionManager = jpaTransactionManager;
+        this.studentEntityTransactionManager = studentEntityTransactionManager;
     }
 
     /**
@@ -60,7 +52,7 @@ public class DataTransferJob {
     public Job dataTransferingJob(JobBuilderFactory jobBuilderFactory) {
         return jobBuilderFactory.get("Data Transfering Job")
                 .incrementer(new RunIdIncrementer())
-                .start(firstDataTransferingStep())
+                .start(studentTransferingStep())
                 .build();
     }
 
@@ -71,18 +63,18 @@ public class DataTransferJob {
      *
      * @return A configured Step instance.
      */
-    private Step firstDataTransferingStep() {
-        return stepBuilderFactory.get("First Data Transfering Step")
+    private Step studentTransferingStep() {
+        return stepBuilderFactory.get("Student Transfering Step")
                 .<Student, com.github.george.databasemigration.entity.mysql.Student>chunk(5000)
-                .reader(jpaCursorItemReader())
-                .processor(dataTransferProcessor)
-                .writer(jpaItemWriter())
+                .reader(studentEntityReader())
+                .processor(studentEntityProcessor)
+                .writer(studentEntityWriter())
                 .faultTolerant()
                 .skip(Throwable.class)
                 .skipLimit(100)
                 .retryLimit(3)
                 .retry(Throwable.class)
-                .transactionManager(jpaTransactionManager)
+                .transactionManager(studentEntityTransactionManager)
                 .build();
     }
 
@@ -91,7 +83,7 @@ public class DataTransferJob {
      *
      * @return A JpaCursorItemReader for reading students.
      */
-    public JpaCursorItemReader<Student> jpaCursorItemReader() {
+    public JpaCursorItemReader<Student> studentEntityReader() {
         JpaCursorItemReader<Student> jpaCursorItemReader = new JpaCursorItemReader<>();
         jpaCursorItemReader.setEntityManagerFactory(postgresqlEntityManagerFactory);
         jpaCursorItemReader.setQueryString("From Student");
@@ -103,7 +95,7 @@ public class DataTransferJob {
      *
      * @return A JpaItemWriter for writing students.
      */
-    public JpaItemWriter<com.github.george.databasemigration.entity.mysql.Student> jpaItemWriter() {
+    public JpaItemWriter<com.github.george.databasemigration.entity.mysql.Student> studentEntityWriter() {
         JpaItemWriter<com.github.george.databasemigration.entity.mysql.Student> jpaItemWriter = new JpaItemWriter<>();
         jpaItemWriter.setEntityManagerFactory(mysqlEntityManagerFactory);
         return jpaItemWriter;

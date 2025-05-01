@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
  * between two different database entities.
  */
 @Component
-public class DataTransferProcessor implements ItemProcessor<com.github.george.databasemigration.entity.postgresql.Student, Student> {
+public class StudentEntityProcessor implements ItemProcessor<com.github.george.databasemigration.entity.postgresql.Student, Student> {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataTransferProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(StudentEntityProcessor.class);
 
     /**
      * Processes a Student entity from PostgreSQL and converts it into
@@ -24,7 +24,7 @@ public class DataTransferProcessor implements ItemProcessor<com.github.george.da
      * @return A transformed Student entity compatible with MySQL.
      */
     @Override
-    public Student process(com.github.george.databasemigration.entity.postgresql.Student item){
+    public Student process(com.github.george.databasemigration.entity.postgresql.Student item) {
         logger.info("Student id: {}", item.getId());
         Student student = new
                 Student();

@@ -1,18 +1,19 @@
 package com.github.george.databasemigration.processor;
 
 import com.github.george.databasemigration.entity.postgresql.Student;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DataTransferProcessorTest {
+import org.junit.jupiter.api.BeforeEach;
 
-    private DataTransferProcessor processor;
+class StudentEntityProcessorTest {
+
+    private StudentEntityProcessor processor;
 
     @BeforeEach
     void setUp() {
-        processor = new DataTransferProcessor();
+        processor = new StudentEntityProcessor();
     }
 
     @Test

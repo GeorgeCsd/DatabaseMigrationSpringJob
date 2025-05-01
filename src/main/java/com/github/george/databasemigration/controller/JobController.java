@@ -25,7 +25,7 @@ public class JobController {
      */
     @GetMapping("/trigger")
     public String startJob(@RequestParam String jobName) {
-        jobService.startJob();
-        return " Job " + jobName + " manually started!";
+        jobService.startJob(jobName);
+        return " Job " + jobName + " has just started!";
     }
 }
